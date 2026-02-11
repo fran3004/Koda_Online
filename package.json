@@ -1,0 +1,17 @@
+{
+  "name": "koda_online",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "build:css": "tailwindcss -i ./src/tailwind.input.css -o ./tailwind.css --minify",
+    "watch:css": "tailwindcss -i ./src/tailwind.input.css -o ./tailwind.css --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}

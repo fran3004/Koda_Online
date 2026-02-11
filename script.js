@@ -56,6 +56,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     criteria.forEach((criterion, index) => {
       const row = document.createElement('tr');
+      row.className = index % 2 === 0 ? 'bg-zinc-900' : 'bg-zinc-800';
       row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
       const tooltipPositionClass = index < 3 ? 'tooltip-bottom' : 'tooltip-default';
       const calculatorIconHtml = criterion.hasCalculator
@@ -63,6 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
         : '';
 
       row.innerHTML = `
+        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-zinc-100 flex items-center">
         <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
           <span class="font-semibold mr-2">${index + 1}.</span>
           <span>${criterion.text}</span>
@@ -72,6 +74,11 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
           ${calculatorIconHtml}
         </td>
+        <td class="px-6 py-4 whitespace-nowrap text-sm text-zinc-300">
+          <div class="flex items-center justify-center">
+            <div class="relative inline-block w-12 mr-2 align-middle select-none">
+              <input type="checkbox" id="toggle-${criterion.id}" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-zinc-100 border-4 appearance-none cursor-pointer" ${criterion.checked ? 'checked' : ''}>
+              <label for="toggle-${criterion.id}" class="toggle-label block overflow-hidden h-6 rounded-full bg-zinc-600 cursor-pointer"></label>
         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
           <div class="flex items-center justify-center">
             <div class="relative inline-block w-12 mr-2 align-middle select-none">
@@ -145,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const shouldCelebrate = !isKnockedOut && percentage >= HIGH_POTENTIAL_PERCENT;
 
     if (shouldCelebrate && !hasShownConfetti) {
+      myConfetti({ particleCount: 160, spread: 90, origin: { y: 0.6 }, colors: ['#fef08a', '#facc15', '#eab308', '#f59e0b'] });
       myConfetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
       openSuccessAlert();
       hasShownConfetti = true;

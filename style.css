@@ -1,3 +1,61 @@
+:root {
+  --koda-gold-100: #fef3c7;
+  --koda-gold-300: #fcd34d;
+  --koda-gold-400: #fbbf24;
+  --koda-gold-500: #f59e0b;
+  --koda-charcoal-900: #0f1115;
+  --koda-charcoal-800: #181b20;
+  --koda-charcoal-700: #242833;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background:
+    radial-gradient(circle at 50% 15%, #3a3d44 0%, #1f2229 35%, #111317 70%, #0b0d10 100%);
+  min-height: 100vh;
+}
+
+.app-shell {
+  background: linear-gradient(180deg, #1a1d23 0%, #121419 100%);
+  border: 1px solid #2d313a;
+}
+
+.koda-header {
+  background: linear-gradient(135deg, #2a2e36 0%, #1a1d23 60%, #14171d 100%);
+  border-bottom: 1px solid #313744;
+}
+
+.koda-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  color: var(--koda-gold-400);
+  text-shadow: 0 4px 14px rgba(0, 0, 0, 0.6);
+}
+
+.koda-logo-text {
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  font-size: clamp(2rem, 5vw, 3.35rem);
+  line-height: 1;
+  background: linear-gradient(180deg, #fde68a 0%, #facc15 42%, #ca8a04 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.koda-logo-cart {
+  width: clamp(1.8rem, 3.5vw, 2.7rem);
+  height: clamp(1.8rem, 3.5vw, 2.7rem);
+  margin-top: 0.15rem;
+}
+
+.koda-logo-line {
+  width: min(360px, 70%);
+  height: 4px;
+  margin: 0.45rem auto 1.25rem;
+  border-radius: 9999px;
+  background: linear-gradient(90deg, transparent 0%, var(--koda-gold-500) 20%, var(--koda-gold-300) 50%, var(--koda-gold-500) 80%, transparent 100%);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #f3f4f6;
@@ -13,6 +71,11 @@ body {
 
 .toggle-checkbox:checked {
   right: 0;
+  border-color: #facc15;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #f59e0b;
   border-color: #22c55e;
 }
 
@@ -30,12 +93,14 @@ body {
 .tooltip-icon,
 .calculator-icon {
   cursor: pointer;
+  color: #a1a1aa;
   color: #9ca3af;
   transition: color 0.2s;
 }
 
 .tooltip-icon:hover,
 .calculator-icon:hover {
+  color: #facc15;
   color: #3b82f6;
 }
 
@@ -111,6 +176,7 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
