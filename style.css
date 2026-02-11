@@ -56,6 +56,9 @@ body {
   border-radius: 9999px;
   background: linear-gradient(90deg, transparent 0%, var(--koda-gold-500) 20%, var(--koda-gold-300) 50%, var(--koda-gold-500) 80%, transparent 100%);
   box-shadow: 0 0 12px rgba(251, 191, 36, 0.45);
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f3f4f6;
 }
 
 .toggle-checkbox {
@@ -73,6 +76,11 @@ body {
 
 .toggle-checkbox:checked + .toggle-label {
   background-color: #f59e0b;
+  border-color: #22c55e;
+}
+
+.toggle-checkbox:checked + .toggle-label {
+  background-color: #22c55e;
 }
 
 .tooltip-container {
@@ -86,12 +94,14 @@ body {
 .calculator-icon {
   cursor: pointer;
   color: #a1a1aa;
+  color: #9ca3af;
   transition: color 0.2s;
 }
 
 .tooltip-icon:hover,
 .calculator-icon:hover {
   color: #facc15;
+  color: #3b82f6;
 }
 
 .tooltip-text {
@@ -167,6 +177,7 @@ body {
   right: 0;
   bottom: 0;
   background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
