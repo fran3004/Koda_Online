@@ -57,7 +57,6 @@ document.addEventListener('DOMContentLoaded', () => {
     criteria.forEach((criterion, index) => {
       const row = document.createElement('tr');
       row.className = index % 2 === 0 ? 'bg-zinc-900' : 'bg-zinc-800';
-      row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
       const tooltipPositionClass = index < 3 ? 'tooltip-bottom' : 'tooltip-default';
       const calculatorIconHtml = criterion.hasCalculator
         ? '<div class="calculator-icon ml-2" aria-label="Abrir calculadora de margen"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 00-1 1v2a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1H7zM6 10a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm4 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zm-4 4a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd"/></svg></div>'
@@ -65,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       row.innerHTML = `
         <td class="px-6 py-4 whitespace-normal text-sm font-medium text-zinc-100 flex items-center">
-        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
           <span class="font-semibold mr-2">${index + 1}.</span>
           <span>${criterion.text}</span>
           <div class="tooltip-container">
@@ -79,11 +77,6 @@ document.addEventListener('DOMContentLoaded', () => {
             <div class="relative inline-block w-12 mr-2 align-middle select-none">
               <input type="checkbox" id="toggle-${criterion.id}" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-zinc-100 border-4 appearance-none cursor-pointer" ${criterion.checked ? 'checked' : ''}>
               <label for="toggle-${criterion.id}" class="toggle-label block overflow-hidden h-6 rounded-full bg-zinc-600 cursor-pointer"></label>
-        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          <div class="flex items-center justify-center">
-            <div class="relative inline-block w-12 mr-2 align-middle select-none">
-              <input type="checkbox" id="toggle-${criterion.id}" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" ${criterion.checked ? 'checked' : ''}>
-              <label for="toggle-${criterion.id}" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
             </div>
           </div>
         </td>`;
@@ -153,7 +146,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (shouldCelebrate && !hasShownConfetti) {
       myConfetti({ particleCount: 160, spread: 90, origin: { y: 0.6 }, colors: ['#fef08a', '#facc15', '#eab308', '#f59e0b'] });
-      myConfetti({ particleCount: 160, spread: 90, origin: { y: 0.6 } });
       openSuccessAlert();
       hasShownConfetti = true;
       clearTimeout(alertTimer);
