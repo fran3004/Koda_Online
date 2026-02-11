@@ -1,734 +1,129 @@
-<html lang="es" data-lt-installed="true"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Viabilidad de Productos | Koda Online </title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310B981'%3E%3Cpath d='M12 20c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z'%3E%3C/path%3E%3Cpath d='M11 7h2v10h-2zm-4 4h2v6H7zm8 0h2v6h-2z'%3E%3C/path%3E%3C/svg%3E">
-    <script src="https://cdn.tailwindcss.com"></script><style type="text/css" id="operaUserStyle"></style>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" xintegrity="sha512-BNaRQnYJYiPSqHHDb58B0yaPfCu+Wgds8Gp/gU33kqBtgNS4tSPHuGibyoVBL5gI9kLmbG4dGzcPTQsROJAgaA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f3f4f6; /* gray-100 */
-        }
-        /* Animación de toggle más sutil */
-        .toggle-checkbox {
-            transition: all 0.3s ease-in-out;
-        }
-        .toggle-label {
-            transition: background-color 0.3s ease-in-out;
-        }
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #22c55e; /* green-500 */
-        }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #22c55e; /* green-500 */
-        }
-        
-        /* --- Estilos para el Tooltip --- */
-        .tooltip-container {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            margin-left: 8px;
-        }
-        .tooltip-icon, .calculator-icon {
-            cursor: pointer;
-            color: #9ca3af; /* gray-400 */
-            transition: color 0.2s;
-        }
-        .tooltip-icon:hover, .calculator-icon:hover {
-            color: #3b82f6; /* blue-500 */
-        }
-        .tooltip-text {
-            visibility: hidden;
-            width: 260px;
-            background-color: #1f2937; /* gray-800 */
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 10px;
-            position: absolute;
-            z-index: 50;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.8rem;
-            line-height: 1.25rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .tooltip-container:hover .tooltip-text {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .tooltip-default { bottom: 150%; left: 50%; margin-left: -130px; }
-        .tooltip-default::after { content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: #1f2937 transparent transparent transparent; }
-        .tooltip-bottom { top: 150%; left: 50%; margin-left: -130px; }
-        .tooltip-bottom::after { content: ""; position: absolute; bottom: 100%; left: 50%; margin-left: -5px; border-width: 5px; border-style: solid; border-color: transparent transparent #1f2937 transparent; }
-        
-        #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; }
-
-        /* --- Estilos para el Modal --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background: white;
-            padding: 2rem;
-            border-radius: 0.75rem;
-            width: 90%;
-            max-width: 500px;
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
-        .modal-overlay.active .modal-content {
-            transform: translateY(0);
-        }
-    </style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Koda | Evaluación de Productos</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%23FDE047'/%3E%3Cstop offset='100%25' stop-color='%23CA8A04'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='12' fill='%23111517'/%3E%3Cpath fill='url(%23g)' d='M10 42V18h6v11l10-11h8L22 30l13 12h-8L16 32v10zM39 22h6v20h-6zm11 0h4l3 10 3-10h4l-5 14h-4z'/%3E%3C/svg%3E">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
-<body class="antialiased text-gray-800">
-    <canvas id="confetti-canvas"></canvas>
+<body class="antialiased text-gray-100">
+  <canvas id="confetti-canvas"></canvas>
 
-    <!-- Success Alert -->
-    <div id="success-alert" class="hidden fixed top-5 right-5 w-full max-w-sm bg-green-500 text-white p-4 rounded-lg shadow-lg z-50 transform transition-transform duration-300 translate-x-full">
-        <div class="flex items-start">
-            <div class="flex-shrink-0">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-            </div>
-            <div class="ml-3 w-0 flex-1 pt-0.5">
-                <p class="text-sm font-bold">¡Felicidades! Tu producto tiene potencial de éxito.</p>
-                <p class="mt-1 text-sm">Ahora descarga tu análisis.</p>
-            </div>
-            <div class="ml-4 flex-shrink-0 flex">
-                <button id="close-alert-btn" class="inline-flex text-white rounded-md hover:text-green-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-400">
-                    <span class="sr-only">Cerrar</span>
-                    <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                </button>
-            </div>
+  <div id="success-alert" class="hidden fixed top-5 right-5 w-full max-w-sm bg-amber-500 text-zinc-950 p-4 rounded-lg shadow-lg z-50 transform transition-transform duration-300 translate-x-full" role="status" aria-live="polite">
+    <div class="flex items-start">
+      <div class="flex-shrink-0">
+        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+      </div>
+      <div class="ml-3 w-0 flex-1 pt-0.5">
+        <p class="text-sm font-bold">¡Excelente selección para Koda!</p>
+        <p class="mt-1 text-sm">Tu producto tiene alto potencial comercial.</p>
+      </div>
+      <div class="ml-4 flex-shrink-0 flex">
+        <button id="close-alert-btn" class="inline-flex text-zinc-900 rounded-md hover:text-zinc-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-300" aria-label="Cerrar alerta">
+          <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="margin-modal" class="modal-overlay" aria-hidden="true">
+    <div class="modal-content">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-zinc-900">Cálculo Rápido de Margen Neto</h2>
+        <button id="close-modal-btn" class="text-zinc-500 hover:text-zinc-800" aria-label="Cerrar modal">×</button>
+      </div>
+      <div class="space-y-4">
+        <div>
+          <label for="sale-price" class="block text-sm font-medium text-zinc-700">Precio de Venta Estimado</label>
+          <input type="number" id="sale-price" placeholder="Ej: 99900" class="mt-1 block w-full px-3 py-2 bg-white border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
         </div>
+        <div>
+          <label for="product-cost" class="block text-sm font-medium text-zinc-700">Costo Total del Producto (Producto + Flete)</label>
+          <input type="number" id="product-cost" placeholder="Ej: 25000" class="mt-1 block w-full px-3 py-2 bg-white border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
+        </div>
+        <div>
+          <label for="cac-cost" class="block text-sm font-medium text-zinc-700">Costo por Compra (CAC) Estimado</label>
+          <input type="number" id="cac-cost" placeholder="Ej: 15000" class="mt-1 block w-full px-3 py-2 bg-white border border-zinc-300 rounded-md shadow-sm focus:outline-none focus:ring-amber-500 focus:border-amber-500 sm:text-sm">
+        </div>
+        <button id="calculate-margin-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-zinc-950 bg-amber-400 hover:bg-amber-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-400">Calcular Margen</button>
+        <div id="margin-result-container" class="text-center pt-4 hidden">
+          <p class="text-sm text-zinc-600">Porcentaje de Margen Neto Estimado:</p>
+          <p id="margin-result" class="text-3xl font-bold"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
+    <div id="capture-area" class="app-shell shadow-2xl rounded-2xl overflow-hidden">
+      <header class="koda-header p-6 text-center">
+        <div class="koda-logo" aria-label="Logo de Koda">
+          <span class="koda-logo-text">KODA</span>
+          <svg class="koda-logo-cart" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 5h2l2.2 9h10.6l1.7-6H7.8"/>
+            <circle cx="10" cy="18" r="1.6" fill="currentColor"/>
+            <circle cx="17" cy="18" r="1.6" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="koda-logo-line"></div>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-amber-100 tracking-tight">Evaluación de Producto</h1>
+        <p class="mt-4 max-w-2xl mx-auto text-zinc-200">Somos una tienda dedicada a la venta minorista de productos de calidad, con precios accesibles y atención personalizada. Esta evaluación te ayuda a elegir mejores productos para ofrecer a tus clientes.</p>
+        <div class="mt-6">
+          <label for="product-name" class="sr-only">Nombre del Producto</label>
+          <input type="text" id="product-name" placeholder="Escribe el nombre del producto..." class="w-full max-w-md p-3 rounded-lg border-2 border-transparent focus:border-amber-300 focus:ring focus:ring-amber-200 focus:ring-opacity-50 transition text-zinc-800 text-center text-lg shadow-sm">
+        </div>
+      </header>
+
+      <div class="p-4 pt-10 sm:p-6 sm:pt-10">
+        <div id="status-card" class="mb-6 p-5 rounded-xl text-white transition-all duration-500 ease-in-out shadow-lg bg-red-600">
+          <div class="flex flex-col items-center text-center">
+            <div id="status-icon" class="mb-3 h-10 w-10"></div>
+            <h3 id="status-title" class="text-2xl font-bold">NO VIABLE / ALTO RIESGO</h3>
+            <p id="status-description" class="mt-1 text-sm">Alerta Roja. El producto falla en criterios críticos o acumula demasiadas debilidades.</p>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-zinc-700" id="criteria-table">
+            <thead class="bg-zinc-800">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-amber-300 uppercase tracking-wider">Criterio</th>
+                <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-amber-300 uppercase tracking-wider w-40">Cumple (Sí/No)</th>
+              </tr>
+            </thead>
+            <tbody class="bg-zinc-900 divide-y divide-zinc-800"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <footer class="bg-zinc-900 p-6 mt-4 border-t border-zinc-800">
+        <div class="flex justify-between items-center">
+          <span class="text-lg font-semibold text-zinc-200">Progreso Total:</span>
+          <span id="total-percentage" class="text-2xl font-bold text-amber-400">0%</span>
+        </div>
+        <div class="w-full bg-zinc-700 rounded-full h-4 mt-2 overflow-hidden">
+          <div id="progress-bar" class="bg-amber-400 h-4 rounded-full transition-all duration-500 ease-in-out" style="width: 0%"></div>
+        </div>
+      </footer>
     </div>
 
-    <!-- Margin Calculator Modal -->
-    <div id="margin-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-bold text-gray-800">Cálculo Rápido de Margen Neto</h2>
-                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800">×</button>
-            </div>
-            <div class="space-y-4">
-                <div>
-                    <label for="sale-price" class="block text-sm font-medium text-gray-700">Precio de Venta Estimado</label>
-                    <input type="number" id="sale-price" placeholder="Ej: 99900" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label for="product-cost" class="block text-sm font-medium text-gray-700">Costo Total del Producto (Producto + Flete)</label>
-                    <input type="number" id="product-cost" placeholder="Ej: 25000" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-                <div>
-                    <label for="cac-cost" class="block text-sm font-medium text-gray-700">Costo por Compra (CAC) Estimado</label>
-                    <input type="number" id="cac-cost" placeholder="Ej: 15000" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
-                </div>
-                <button id="calculate-margin-btn" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500">
-                    Calcular Margen
-                </button>
-                <div id="margin-result-container" class="text-center pt-4 hidden">
-                    <p class="text-sm text-gray-600">Porcentaje de Margen Neto Estimado:</p>
-                    <p id="margin-result" class="text-3xl font-bold"></p>
-                </div>
-            </div>
-        </div>
+    <div class="mt-8 flex flex-col sm:flex-row gap-4">
+      <button id="export-btn" class="flex-1 flex items-center justify-center gap-3 bg-amber-400 hover:bg-amber-300 text-zinc-950 font-bold py-3 px-4 rounded-lg transition-transform transform hover:-translate-y-1 shadow-lg">
+        <span>Descarga mi Análisis</span>
+      </button>
+      <button id="reset-btn" class="flex-1 flex items-center justify-center gap-3 bg-zinc-700 hover:bg-zinc-600 text-zinc-100 font-bold py-3 px-4 rounded-lg transition-transform transform hover:-translate-y-1 shadow-lg">
+        <span>Limpiar Análisis</span>
+      </button>
     </div>
+  </div>
 
-    <div class="container mx-auto p-4 sm:p-6 lg:p-8 max-w-4xl">
-        <div id="capture-area" class="bg-white shadow-2xl rounded-2xl overflow-hidden">
-            <header class="bg-gradient-to-br from-emerald-600 to-green-600 p-6 text-center">
-                <h1 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight flex items-center justify-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="currentColor" viewBox="0 0 24 24"><path d="M12 20c4.411 0 8-3.589 8-8s-3.589-8-8-8-8 3.589-8 8 3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6-6-2.691-6-6 2.691-6 6-6z"></path><path d="M11 7h2v10h-2zm-4 4h2v6H7zm8 0h2v6h-2z"></path></svg>
-                    <span>Evaluación de Producto</span>
-                </h1>
-                <p class="mt-4 max-w-2xl mx-auto text-white">
-                    Usa esta herramienta para analizar tus productos y tomar decisiones basadas en datos, no en emociones. Solo ingresa el nombre del producto y califica cada criterio con honestidad.
-                    <br><strong>¡Vamos a descubrir si tienes un producto ganador!</strong>
-                </p>
-                <div class="mt-6">
-                    <label for="product-name" class="sr-only">Nombre del Producto</label>
-                    <input type="text" id="product-name" placeholder="Escribe el nombre del producto..." class="w-full max-w-md p-3 rounded-lg border-2 border-transparent focus:border-emerald-300 focus:ring focus:ring-emerald-200 focus:ring-opacity-50 transition text-gray-800 text-center text-lg shadow-sm">
-                </div>
-            </header>
-
-            <div class="p-4 pt-10 sm:p-6 sm:pt-10">
-                <div id="status-card" class="mb-6 p-5 rounded-xl text-white transition-all duration-500 ease-in-out shadow-lg bg-red-600">
-                     <div class="flex flex-col items-center text-center">
-                        <div id="status-icon" class="mb-3 h-10 w-10"><svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path></svg></div>
-                        <h3 id="status-title" class="text-2xl font-bold">NO VIABLE / ALTO RIESGO</h3>
-                        <p id="status-description" class="mt-1 text-sm">Alerta Roja. El producto falla en criterios críticos o acumula demasiadas debilidades. Es recomendable buscar otra opción.</p>
-                    </div>
-                </div>
-
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200" id="criteria-table">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-bold text-gray-600 uppercase tracking-wider">Criterio</th>
-                                <th scope="col" class="px-6 py-3 text-center text-xs font-bold text-gray-600 uppercase tracking-wider w-40">Cumple (Sí/No)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="bg-white divide-y divide-gray-200"><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">1.</span>
-                            <span>Resuelve un Problema Específico</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-bottom">Un producto que soluciona un dolor real es más fácil de vender. La gente paga por soluciones, no por 'vitaminas'.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-1" id="toggle-1" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-1" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">2.</span>
-                            <span>Tiene un 'Efecto Wow' (Fácil de demostrar en video)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-bottom">Debe capturar la atención en 3 segundos. Un 'efecto wow' visual es clave para anuncios efectivos en redes sociales.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-2" id="toggle-2" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-2" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">3.</span>
-                            <span>No se Encuentra Fácilmente en Tiendas Físicas</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-bottom">Si tu cliente puede encontrar el mismo producto en el supermercado de la esquina, pierde todo el sentido de urgencia y exclusividad. La venta online en dropshipping se nutre de la novedad.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-3" id="toggle-3" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-3" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">4.</span>
-                            <span>Se Dirige a una Audiencia Apasionada</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Es más fácil (y económico) venderle a un nicho que se auto-identifica, como 'amantes de los perros' o 'fans del ciclismo'. Estas audiencias son fáciles de segmentar en los anuncios.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-4" id="toggle-4" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-4" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">5.</span>
-                            <span>Fiabilidad del Proveedor</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">El mejor producto del mundo con un proveedor que no responde o envía tarde es una receta para el fracaso y las devoluciones. La comunicación con tu proveedor es clave.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-5" id="toggle-5" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-5" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">6.</span>
-                            <span>Potencial de Escalabilidad (Stock Suficiente)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">¿Qué pasa si tu anuncio se vuelve viral? Un buen producto debe tener suficiente inventario (+100 unidades) para que puedas escalar tus ventas sin tener que pausar tus campañas.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-6" id="toggle-6" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-6" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">7.</span>
-                            <span>Nivel de Competencia (Mercado Poco Saturado)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Vender un producto que otras 20 tiendas ya están promocionando es una batalla cuesta arriba. Busca productos con pocos competidores para tener una ventaja inicial.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-7" id="toggle-7" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-7" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">8.</span>
-                            <span>Tiene un Margen de Ganancia Saludable (+30% neto)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Después de pagar el producto, el envío Y la publicidad, ¿te queda al menos un 30% del precio de venta como ganancia limpia? Este es el indicador clave de un negocio sostenible</span>
-                            </div>
-                            
-                        <div class="calculator-icon ml-2" data-criterion-id="8">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 00-1 1v2a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1H7zM6 10a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm4 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zm-4 4a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd"></path></svg>
-                        </div>
-                    
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-8" id="toggle-8" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-8" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">9.</span>
-                            <span>Precio de Venta Impulsivo</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">El precio final debe ser una decisión fácil para el cliente. Un producto de bajo o mediano costo se vende por impulso, uno muy caro requiere mucha más consideración y frena la venta.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-9" id="toggle-9" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-9" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">10.</span>
-                            <span>Es Simple de Usar y Entender</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Un producto que requiere un manual de 20 páginas para ser usado generará clientes frustrados y un alto número de devoluciones. Busca la simplicidad.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-10" id="toggle-10" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-10" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">11.</span>
-                            <span>No es Frágil ni Complejo de Enviar</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Evita productos de cristal, electrónicos muy delicados o de gran tamaño. Los problemas de logística y los productos rotos se comerán tus ganancias y tu paz mental.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-11" id="toggle-11" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-11" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">12.</span>
-                            <span>Facilidad de Marketing (ángulos)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Un producto robusto se puede vender de muchas formas diferentes. Si solo se te ocurre un 'gancho' para venderlo, tu marketing será muy frágil ante los cambios del mercado.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-12" id="toggle-12" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-12" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">13.</span>
-                            <span>Contenido para anuncios</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">Que el proveedor ofrezca videos e imágenes de alta calidad es un acelerador inmenso. Te ahorra días de trabajo en la creación de tus propios anuncios ('creativos').</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-13" id="toggle-13" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-13" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-gray-50">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">14.</span>
-                            <span>Potencial de Branding a Largo Plazo</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">¿Puedes construir una marca alrededor de este producto o es una moda pasajera? Pensar a largo plazo te permite construir un activo, no solo tener una venta.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-14" id="toggle-14" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-14" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr><tr class="bg-white">
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">15.</span>
-                            <span>Potencial de Recompra y Venta Cruzada (LTV)</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"></path></svg>
-                                <span class="tooltip-text tooltip-default">¿Puedes venderle algo más a este mismo cliente en el futuro? Adquirir un cliente es caro; venderle una segunda o tercera vez es donde reside la verdadera rentabilidad.</span>
-                            </div>
-                            
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-15" id="toggle-15" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer">
-                                    <label for="toggle-15" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    </tr></tbody>
-                    </table>
-                </div>
-            </div>
-
-            <footer class="bg-gray-50 p-6 mt-4 border-t">
-                <div class="flex justify-between items-center">
-                    <span class="text-lg font-semibold text-gray-700">Progreso Total:</span>
-                    <span id="total-percentage" class="text-2xl font-bold text-emerald-600">0%</span>
-                </div>
-                <div class="w-full bg-gray-200 rounded-full h-4 mt-2 overflow-hidden">
-                    <div id="progress-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500 ease-in-out" style="width: 0%"></div>
-                </div>
-            </footer>
-        </div>
-        
-        <div class="mt-8 flex flex-col sm:flex-row gap-4">
-            <button id="export-btn" class="flex-1 flex items-center justify-center gap-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:-translate-y-1 shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                <span>Descarga mi Análisis</span>
-            </button>
-            <button id="reset-btn" class="flex-1 flex items-center justify-center gap-3 bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg transition-transform transform hover:-translate-y-1 shadow-lg">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h5M20 20v-5h-5M4 4l16 16"></path></svg>
-                <span>Limpiar Análisis</span>
-            </button>
-        </div>
-        <footer class="mt-8 text-center">
-            <p class="text-sm text-gray-500">2026 Desarrollado por futuro Ing. Franier Fernandez de <b> Universidad popular del cesar </b></p>
-        </footer>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- ELEMENTOS DEL DOM ---
-            const tableBody = document.querySelector('#criteria-table tbody');
-            const totalPercentageEl = document.getElementById('total-percentage');
-            const progressBarEl = document.getElementById('progress-bar');
-            const exportBtn = document.getElementById('export-btn');
-            const resetBtn = document.getElementById('reset-btn');
-            const productNameEl = document.getElementById('product-name');
-            const statusCardEl = document.getElementById('status-card');
-            const statusIconEl = document.getElementById('status-icon');
-            const statusTitleEl = document.getElementById('status-title');
-            const statusDescriptionEl = document.getElementById('status-description');
-            
-            // Alerta
-            const successAlert = document.getElementById('success-alert');
-            const closeAlertBtn = document.getElementById('close-alert-btn');
-            
-            // Modal
-            const marginModal = document.getElementById('margin-modal');
-            const closeModalBtn = document.getElementById('close-modal-btn');
-            const calculateMarginBtn = document.getElementById('calculate-margin-btn');
-            const marginResultContainer = document.getElementById('margin-result-container');
-            const marginResultEl = document.getElementById('margin-result');
-            
-            // Confeti
-            const confettiCanvas = document.getElementById('confetti-canvas');
-            const myConfetti = confetti.create(confettiCanvas, { resize: true });
-            
-            let hasShownConfetti = false;
-            let alertTimer = null;
-
-            // --- LÓGICA DE PUNTUACIÓN RECALIBRADA ---
-            const MAX_SCORE = 33;
-            const criteria = [
-                { id: 1, text: "Resuelve un Problema Espec&iacute;fico", tooltip: "Un producto que soluciona un dolor real es m&aacute;s f&aacute;cil de vender. La gente paga por soluciones, no por 'vitaminas'.", points: 3, checked: false },
-                { id: 8, text: "Tiene un Margen de Ganancia Saludable (+30% neto)", tooltip: "Después de pagar el producto, el envío Y la publicidad, ¿te queda al menos un 30% del precio de venta como ganancia limpia? Este es el indicador clave de un negocio sostenible", points: 3, checked: false, isKnockout: true, hasCalculator: true },
-                { id: 5, text: "Fiabilidad del Proveedor", tooltip: "El mejor producto del mundo con un proveedor que no responde o env&iacute;a tarde es una receta para el fracaso y las devoluciones. La comunicaci&oacute;n con tu proveedor es clave.", points: 3, checked: false, isKnockout: true },
-                { id: 6, text: "Potencial de Escalabilidad (Stock Suficiente)", tooltip: "&iquest;Qu&eacute; pasa si tu anuncio se vuelve viral? Un buen producto debe tener suficiente inventario (+100 unidades) para que puedas escalar tus ventas sin tener que pausar tus campa&ntilde;as.", points: 3, checked: false },
-                { id: 7, text: "Nivel de Competencia (Mercado Poco Saturado)", tooltip: "Vender un producto que otras 20 tiendas ya est&aacute;n promocionando es una batalla cuesta arriba. Busca productos con pocos competidores para tener una ventaja inicial.", points: 3, checked: false },
-                { id: 2, text: "Tiene un 'Efecto Wow' (F&aacute;cil de demostrar en video)", tooltip: "Debe capturar la atenci&oacute;n en 3 segundos. Un 'efecto wow' visual es clave para anuncios efectivos en redes sociales.", points: 2, checked: false },
-                { id: 3, text: "No se Encuentra F&aacute;cilmente en Tiendas F&iacute;sicas", tooltip: "Si tu cliente puede encontrar el mismo producto en el supermercado de la esquina, pierde todo el sentido de urgencia y exclusividad. La venta online en dropshipping se nutre de la novedad.", points: 2, checked: false },
-                { id: 4, text: "Se Dirige a una Audiencia Apasionada", tooltip: "Es m&aacute;s f&aacute;cil (y econ&oacute;mico) venderle a un nicho que se auto-identifica, como 'amantes de los perros' o 'fans del ciclismo'. Estas audiencias son f&aacute;ciles de segmentar en los anuncios.", points: 2, checked: false },
-                { id: 9, text: "Precio de Venta Impulsivo", tooltip: "El precio final debe ser una decisi&oacute;n f&aacute;cil para el cliente. Un producto de bajo o mediano costo se vende por impulso, uno muy caro requiere mucha m&aacute;s consideraci&oacute;n y frena la venta.", points: 2, checked: false },
-                { id: 13, text: "Contenido para anuncios", tooltip: "Que el proveedor ofrezca videos e im&aacute;genes de alta calidad es un acelerador inmenso. Te ahorra d&iacute;as de trabajo en la creaci&oacute;n de tus propios anuncios ('creativos').", points: 2, checked: false },
-                { id: 10, text: "Es Simple de Usar y Entender", tooltip: "Un producto que requiere un manual de 20 p&aacute;ginas para ser usado generar&aacute; clientes frustrados y un alto n&uacute;mero de devoluciones. Busca la simplicidad.", points: 2, checked: false },
-                { id: 11, text: "No es Fr&aacute;gil ni Complejo de Enviar", tooltip: "Evita productos de cristal, electr&oacute;nicos muy delicados o de gran tama&ntilde;o. Los problemas de log&iacute;stica y los productos rotos se comer&aacute;n tus ganancias y tu paz mental.", points: 2, checked: false },
-                { id: 12, text: "Facilidad de Marketing (&aacute;ngulos)", tooltip: "Un producto robusto se puede vender de muchas formas diferentes. Si solo se te ocurre un 'gancho' para venderlo, tu marketing ser&aacute; muy fr&aacute;gil ante los cambios del mercado.", points: 2, checked: false },
-                { id: 14, text: "Potencial de Branding a Largo Plazo", tooltip: "&iquest;Puedes construir una marca alrededor de este producto o es una moda pasajera? Pensar a largo plazo te permite construir un activo, no solo tener una venta.", points: 1, checked: false },
-                { id: 15, text: "Potencial de Recompra y Venta Cruzada (LTV)", tooltip: "&iquest;Puedes venderle algo m&aacute;s a este mismo cliente en el futuro? Adquirir un cliente es caro; venderle una segunda o tercera vez es donde reside la verdadera rentabilidad.", points: 1, checked: false }
-            ];
-            
-            const displayCriteria = [...criteria].sort((a, b) => a.id - b.id);
-
-            function renderTable() {
-                tableBody.innerHTML = '';
-                displayCriteria.forEach((criterion, index) => {
-                    const row = document.createElement('tr');
-                    row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
-                    const tooltipPositionClass = index < 3 ? 'tooltip-bottom' : 'tooltip-default';
-
-                    const calculatorIconHtml = criterion.hasCalculator ? `
-                        <div class="calculator-icon ml-2" data-criterion-id="${criterion.id}">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H6zm1 2a1 1 0 00-1 1v2a1 1 0 001 1h6a1 1 0 001-1V5a1 1 0 00-1-1H7zM6 10a1 1 0 011-1h2a1 1 0 110 2H7a1 1 0 01-1-1zm4 0a1 1 0 011-1h2a1 1 0 110 2h-2a1 1 0 01-1-1zm-4 4a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1z" clip-rule="evenodd" /></svg>
-                        </div>
-                    ` : '';
-
-                    row.innerHTML = `
-                        <td class="px-6 py-4 whitespace-normal text-sm font-medium text-gray-900 flex items-center">
-                            <span class="font-semibold mr-2">${index + 1}.</span>
-                            <span>${criterion.text}</span>
-                            <div class="tooltip-container">
-                                <svg class="tooltip-icon w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z" /></svg>
-                                <span class="tooltip-text ${tooltipPositionClass}">${criterion.tooltip}</span>
-                            </div>
-                            ${calculatorIconHtml}
-                        </td>
-                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                            <div class="flex items-center justify-center">
-                                <div class="relative inline-block w-12 mr-2 align-middle select-none">
-                                    <input type="checkbox" name="toggle-${criterion.id}" id="toggle-${criterion.id}" class="toggle-checkbox absolute block w-6 h-6 rounded-full bg-white border-4 appearance-none cursor-pointer" ${criterion.checked ? 'checked' : ''}/>
-                                    <label for="toggle-${criterion.id}" class="toggle-label block overflow-hidden h-6 rounded-full bg-gray-300 cursor-pointer"></label>
-                                </div>
-                            </div>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
-                });
-                // Add event listeners for new calculator icons
-                document.querySelectorAll('.calculator-icon').forEach(icon => {
-                    icon.addEventListener('click', () => marginModal.classList.add('active'));
-                });
-            }
-
-            function updateStatusCard(score, isKnockedOut) {
-                const iconCancel = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" /></svg>`;
-                const iconWarning = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.21 3.03-1.742 3.03H4.42c-1.532 0-2.492-1.696-1.742-3.03l5.58-9.92zM10 13a1 1 0 110-2 1 1 0 010 2zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" /></svg>`;
-                const iconCheck = `<svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>`;
-
-                statusCardEl.classList.remove('bg-red-600', 'bg-amber-500', 'bg-green-600');
-                
-                if (isKnockedOut || score <= 16) {
-                    statusCardEl.classList.add('bg-red-600');
-                    statusIconEl.innerHTML = iconCancel;
-                    statusTitleEl.textContent = 'NO VIABLE / ALTO RIESGO';
-                    statusDescriptionEl.innerHTML = 'Alerta Roja. El producto falla en criterios cr&iacute;ticos o acumula demasiadas debilidades. Es recomendable buscar otra opci&oacute;n.';
-                } else if (score >= 17 && score <= 24) {
-                    statusCardEl.classList.add('bg-amber-500');
-                    statusIconEl.innerHTML = iconWarning;
-                    statusTitleEl.textContent = 'Potencial con PRECAUCI\u00D3N';
-                    statusDescriptionEl.innerHTML = 'Cuidado. El producto tiene potencial, pero presenta debilidades importantes en &aacute;reas operativas o de marketing que debes resolver antes de invertir.';
-                } else { // score >= 25
-                    statusCardEl.classList.add('bg-green-600');
-                    statusIconEl.innerHTML = iconCheck;
-                    statusTitleEl.textContent = 'Producto Viable / ALTO POTENCIAL';
-                    statusDescriptionEl.innerHTML = '&iexcl;Excelente! El producto tiene una base s&oacute;lida y cumple con los criterios operativos y de marketing. Alto potencial de &eacute;xito.';
-                }
-            }
-
-            function closeSuccessAlert() {
-                if (!successAlert.classList.contains('hidden')) {
-                    successAlert.classList.add('translate-x-full');
-                    successAlert.classList.remove('translate-x-0');
-                    setTimeout(() => successAlert.classList.add('hidden'), 300);
-                }
-            }
-
-            function updateUI() {
-                let currentScore = 0;
-                let isKnockedOut = false;
-
-                criteria.forEach(c => {
-                    if (c.checked) {
-                        currentScore += c.points;
-                    }
-                    if (c.isKnockout && !c.checked) {
-                        isKnockedOut = true;
-                    }
-                });
-
-                const percentage = Math.round((currentScore / MAX_SCORE) * 100);
-
-                totalPercentageEl.textContent = `${percentage}%`;
-                progressBarEl.style.width = `${percentage}%`;
-                
-                updateStatusCard(currentScore, isKnockedOut);
-
-                if (alertTimer) clearTimeout(alertTimer);
-
-                if (!isKnockedOut && currentScore >= 25 && !hasShownConfetti) {
-                    myConfetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
-                    successAlert.classList.remove('hidden', 'translate-x-full');
-                    successAlert.classList.add('translate-x-0');
-                    hasShownConfetti = true;
-                    alertTimer = setTimeout(closeSuccessAlert, 5000);
-                } else if (currentScore < 25 || isKnockedOut) {
-                    hasShownConfetti = false;
-                }
-            }
-            
-            tableBody.addEventListener('change', function(e) {
-                if (e.target.type === 'checkbox') {
-                    const criterionId = parseInt(e.target.id.split('-')[1]);
-                    const criterion = criteria.find(c => c.id === criterionId);
-                    if (criterion) {
-                        criterion.checked = e.target.checked;
-                        updateUI();
-                    }
-                }
-            });
-
-            exportBtn.addEventListener('click', function() {
-                const captureArea = document.getElementById('capture-area');
-                const productName = productNameEl.value.trim().replace(/\s+/g, '_');
-                const fileName = productName ? `analisis_${productName}.png` : 'analisis_producto.png';
-
-                html2canvas(captureArea, { useCORS: true, scale: 2 }).then(canvas => {
-                    const link = document.createElement('a');
-                    link.download = fileName;
-                    link.href = canvas.toDataURL('image/png');
-                    link.click();
-                });
-            });
-
-            resetBtn.addEventListener('click', function() {
-                productNameEl.value = '';
-                criteria.forEach(c => c.checked = false);
-                renderTable();
-                updateUI();
-            });
-
-            closeAlertBtn.addEventListener('click', () => {
-                if (alertTimer) clearTimeout(alertTimer);
-                closeSuccessAlert();
-            });
-            
-            // --- LÓGICA DEL MODAL ---
-            closeModalBtn.addEventListener('click', () => marginModal.classList.remove('active'));
-            marginModal.addEventListener('click', (e) => {
-                if (e.target === marginModal) {
-                    marginModal.classList.remove('active');
-                }
-            });
-
-            calculateMarginBtn.addEventListener('click', () => {
-                const salePrice = parseFloat(document.getElementById('sale-price').value);
-                const productCost = parseFloat(document.getElementById('product-cost').value);
-                const cacCost = parseFloat(document.getElementById('cac-cost').value);
-
-                if (isNaN(salePrice) || isNaN(productCost) || isNaN(cacCost) || salePrice <= 0) {
-                    marginResultEl.textContent = 'Error';
-                    marginResultEl.classList.add('text-red-500');
-                    marginResultContainer.classList.remove('hidden');
-                    return;
-                }
-
-                const netProfit = salePrice - productCost - cacCost;
-                const netMargin = (netProfit / salePrice) * 100;
-
-                marginResultEl.textContent = `${netMargin.toFixed(2)}%`;
-                marginResultEl.classList.remove('text-red-500');
-                marginResultContainer.classList.remove('hidden');
-            });
-
-            // Inicialización
-            renderTable();
-            updateUI();
-        });
-    </script>
-
-
-
-</body></html>z
+  <script src="script.js"></script>
+</body>
+</html>
