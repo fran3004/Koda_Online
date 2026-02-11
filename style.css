@@ -199,6 +199,10 @@ body {
   color: #71717a;
 }
 
+#margin-result {
+  color: #18181b;
+}
+
 .modal-overlay.active .modal-content {
   transform: translateY(0);
 }
