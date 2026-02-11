@@ -191,6 +191,18 @@ body {
   transition: transform 0.3s ease;
 }
 
+.modal-content input[type="number"] {
+  color: #18181b;
+}
+
+.modal-content input[type="number"]::placeholder {
+  color: #71717a;
+}
+
+#margin-result {
+  color: #18181b;
+}
+
 .modal-overlay.active .modal-content {
   transform: translateY(0);
 }
